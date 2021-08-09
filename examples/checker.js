@@ -117,4 +117,5 @@ function test() {
 }
 
 // 定时循环执行，单位为毫秒,两小时为7200000
-setInterval(test,7200000);
+// setInterval(test,7200000);
+test();

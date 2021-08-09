@@ -1,5 +1,10 @@
 const Signer = require("../index");
 const axios = require('axios');
+// 测试机器人url
+// const larkRobotUrl = "https://open.larksuite.com/open-apis/bot/v2/hook/6b980745-4c12-4e79-98eb-028e18836e6e"
+
+// 接口报告群机器人url
+const larkRobotUrl = "https://open.larksuite.com/open-apis/bot/v2/hook/c7647be4-0d05-4448-9e49-4ea254ac0ac8"
 
 async function getCsrfToken(url, userAgent) {
   const response = await axios.head(url, {
@@ -58,12 +63,58 @@ async function feeds(aid, secUid, cursor='0', count=30) {
   }
 }
 
+// 发送飞书消息，con参数为消息内容
+function larkSend(con){
+    var axios = require('axios');
+    var config = {
+      method: 'post',
+      url: larkRobotUrl,
+      headers: { 
+        'Content-Type': 'application/json'
+      },
+      data : con
+    };
+
+    axios(config)
+    .then(function (response) {
+      console.log(JSON.stringify(response.data));
+      console.log("success")
+    })
+    .catch(function (error) {
+      console.log(error);
+      console.log("fail")
+    });
+
+}
+
+
 function test() {
   feeds("1988", "MS4wLjABAAAAOUoQXeHglWcq4ca3MwlckxqAe-RIKQ1zlH9NkQkbLAT_h1_6SDc4zyPdAcVdTWZF", '0', 30).then(d => {
+    var con = JSON.stringify({
+      "msg_type": "text",
+      "content": {
+          "text":
+              "tiktok feeds拉取api监控"+
+              "\n\nauthor_id: 6896939896755176449"+
+              "\n请求拉取feeds数量: 30"+
+              "\n实际拉取feeds数量: "+d.itemList.length
+      }
+      })
+    // 请求成功的消息
+    larkSend(con)
     console.log('feeds', d)
   }).catch(e => {
     console.error('get feeds error', e);
+    var con = JSON.stringify({
+      "msg_type": "text",
+      "content": {
+          "text": "tiktok feeds拉取api监控\n"+JSON.stringify(e)
+      }
+      });
+      // 发送失败信息
+    larkSend(con);
   });
 }
 
-// test();
+// 定时循环执行，单位为毫秒,两小时为7200000
+setInterval(test,7200000);

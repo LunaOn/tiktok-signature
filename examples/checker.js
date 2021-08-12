@@ -41,16 +41,17 @@ async function feeds(aid, secUid, cursor='0', count=30) {
     };
     console.log("sign data", data);
 
-    const csrf = await getCsrfToken(url, data.navigator.user_agent);
-    console.log('get csrf', csrf);
+    // const csrf = await getCsrfToken(url, data.navigator.user_agent);
+    // console.log('get csrf', csrf);
 
     const response = await axios.get(data.signed_url, {
       headers:{
         "accept-encoding": "gzip, deflate",
-        "cookie": "tt_webid_v2=1234567890; csrf_session_id=" + csrf.session_id,
+        // "cookie": "tt_webid_v2=1234567890; csrf_session_id=" + csrf.session_id,
+        // "cookie": "tt_webid_v2=1234567890; csrf_session_id=12312312",
         "Referer": "https://www.tiktok.com/",
         "user-agent": data.navigator.user_agent,
-        "x-secsdk-csrf-token": csrf.token
+        // "x-secsdk-csrf-token": csrf.token
       }
     })
     // console.log("feeds response", response.data); // too large

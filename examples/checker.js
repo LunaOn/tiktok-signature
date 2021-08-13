@@ -66,55 +66,65 @@ async function feeds(aid, secUid, cursor='0', count=30) {
 
 // 发送飞书消息，con参数为消息内容
 function larkSend(con){
+  return new Promise((resolve, reject) => {
     var axios = require('axios');
     var config = {
       method: 'post',
       url: larkRobotUrl,
-      headers: { 
+      headers: {
         'Content-Type': 'application/json'
       },
       data : con
     };
 
     axios(config)
-    .then(function (response) {
-      console.log(JSON.stringify(response.data));
-      console.log("success")
-    })
-    .catch(function (error) {
-      console.log(error);
-      console.log("fail")
-    });
-
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+        console.log("success")
+        resolve(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+        console.log("fail")
+        reject(error)
+      });
+  })
 }
 
 
-function test() {
-  feeds("1988", "MS4wLjABAAAAOUoQXeHglWcq4ca3MwlckxqAe-RIKQ1zlH9NkQkbLAT_h1_6SDc4zyPdAcVdTWZF", '0', 30).then(d => {
-    var con = JSON.stringify({
+async function test() {
+  try {
+    const d = await feeds("1988", "MS4wLjABAAAAOUoQXeHglWcq4ca3MwlckxqAe-RIKQ1zlH9NkQkbLAT_h1_6SDc4zyPdAcVdTWZF", '0', 30);
+    const con = JSON.stringify({
       "msg_type": "text",
       "content": {
-          "text":
-              "tiktok feeds拉取api监控"+
-              "\n\nauthor_id: 6896939896755176449"+
-              "\n请求拉取feeds数量: 30"+
-              "\n实际拉取feeds数量: "+d.itemList.length
+        "text":
+          "tiktok feeds拉取api监控" +
+          "\n\nauthor_id: 6896939896755176449" +
+          "\n请求拉取feeds数量: 30" +
+          "\n实际拉取feeds数量: " + d.itemList.length
       }
-      })
+    })
     // 请求成功的消息
-    larkSend(con)
+    await larkSend(con)
     console.log('feeds', d)
-  }).catch(e => {
+    process.exit(0)
+  } catch (e) {
     console.error('get feeds error', e);
-    var con = JSON.stringify({
+    const con = JSON.stringify({
       "msg_type": "text",
       "content": {
-          "text": "tiktok feeds拉取api监控\n"+JSON.stringify(e)
+        "text": "tiktok feeds拉取api监控\n" + JSON.stringify(e)
       }
-      });
-      // 发送失败信息
-    larkSend(con);
-  });
+    });
+    // 发送失败信息
+    try {
+      await larkSend(con);
+    } catch (e) {
+      console.log("send lark failed");
+    }
+    process.exit(0)
+  }
 }
 
 // 定时循环执行，单位为毫秒,两小时为7200000

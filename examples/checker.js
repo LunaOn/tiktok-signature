@@ -26,7 +26,7 @@ async function getCsrfToken(url, userAgent) {
 async function feeds(aid, secUid, cursor='0', count=30) {
   const url = "https://m.tiktok.com/api/post/item_list/?aid="+aid+"&count="+count+"&secUid="+secUid+"&cursor="+cursor;
 
-  const signer = new Signer();
+  const signer = new Signer("https://www.apple.com/");
   await signer.init();
 
   try {

@@ -114,7 +114,7 @@ async function test() {
     const con = JSON.stringify({
       "msg_type": "text",
       "content": {
-        "text": "tiktok feeds拉取api监控\n" + JSON.stringify(e)
+        "text": "tiktok feeds拉取api监控\n" + e.message
       }
     });
     // 发送失败信息

@@ -106,7 +106,7 @@ async function test() {
       }
     })
     // 请求成功的消息
-    await larkSend(con)
+    // await larkSend(con)
     console.log('feeds', d)
     process.exit(0)
   } catch (e) {

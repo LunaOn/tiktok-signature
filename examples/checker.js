@@ -93,14 +93,30 @@ function larkSend(con){
 
 
 async function test() {
+  const arrs = ['MS4wLjABAAAAwAg0rSzO65WQfz4RzQgGv2Xdv108BgPXhRrrmNVIHQZ9PO8-flwwRtEppYTS0OjA',
+    'MS4wLjABAAAAOUoQXeHglWcq4ca3MwlckxqAe-RIKQ1zlH9NkQkbLAT_h1_6SDc4zyPdAcVdTWZF',
+    'MS4wLjABAAAAC6vUWgFo6ffQ7HnszEsue1HeDyRDsriHV0Aodc6Y2xaB8ZdYmjh48jim6n9foUOx',
+    'MS4wLjABAAAA-pn_Ldq9lnLEEg280ELTpzO2V3JTQRP8oaLMJxt8r0cZJD3es3Y9RxJraqFIMc5b',
+    'MS4wLjABAAAAgkJ8fa83NNC9Y8Zo7sRdQnMJjPp54IXQgshQLnmKIFwoForCSUd2k9kB9vtnOLBN',
+    'MS4wLjABAAAADRbbBKC8Mma9FTdZoNFGPKC-vfkCjFcBaFALRb0xgMop4uplRGIw8oqJJMT-SjUq',
+    'MS4wLjABAAAAI8ty2tobHftTKg1IBavyNnFiZNi8p4Ksz_zbbgBS8DtEGJXvQLmaDzcw6-99hjLl',
+    'MS4wLjABAAAAQw9rF9OzKv6eI5VEvYeBwaP-YLvYaqxV7x1Uv4yR-6_XCFqH6JfdlP6ImUDSkGxE',
+    'MS4wLjABAAAAl6XemRDo_L4eabqQPAjAgP0pKBqCzRQzLzVdLW9PMiiV4boNCA9czNoO7gpopQG8',
+    'MS4wLjABAAAATepP3a0jHn0Ff1zxJUWiZwYDxSr8FdlhcYh5Y2IcDuahYb9RrETagV9rPcnKXWJS',
+  ];
+  let num = Math.floor(Math.random() * 10) ;
+  let secUid = arrs[num]
   try {
-    const d = await feeds("1988", "MS4wLjABAAAAOUoQXeHglWcq4ca3MwlckxqAe-RIKQ1zlH9NkQkbLAT_h1_6SDc4zyPdAcVdTWZF", '0', 30);
+    const d = await feeds("1988", secUid, '0', 30);
+    console.log('feeds', d.itemList[0].author)
     const con = JSON.stringify({
       "msg_type": "text",
       "content": {
         "text":
           "tiktok feeds拉取api监控" +
-          "\n\nauthor_id: 6896939896755176449" +
+          "\n\nid: " + d.itemList[0].author.id +
+            "\nuniqueId: " + d.itemList[0].author.uniqueId +
+            "\nsecUid: " + secUid +
           "\n请求拉取feeds数量: 30" +
           "\n实际拉取feeds数量: " + d.itemList.length
       }
